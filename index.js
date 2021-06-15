@@ -21,6 +21,7 @@ app.use((req, res, next) => {
 
 //first parameter is url
 //second is a function with two inputs one is request and one is response
+app.use(express.static("public"));
 app.get("/api/faculty", function (req, res) {
   res.send(faculty);
 });
@@ -49,4 +50,4 @@ app.post("/api/faculty", function (req, res) {
   res.send(faculty);
 });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000)
