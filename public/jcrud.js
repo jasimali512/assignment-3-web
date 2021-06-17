@@ -7,7 +7,9 @@ $(function () {
     var name = $("#upname").val();
     $.ajax({
       url: "https://assignment03web.herokuapp.com/api/faculty/" + id,
-      data: { name },
+      headers: { "Content-Type": "application/json" },
+      dataType: "json",
+      data: JSON.stringify({ name }),
       method: "PUT",
       success: function (response) {
         loaddata();
@@ -24,20 +26,36 @@ function handleupdate() {
   var btn = $(this);
   var parentID = btn.closest(".eproduct");
   let id = parentID.attr("data-id");
-  console.log(id)
-  $.get("https://assignment03web.herokuapp.com/api/faculty/" + id, function (response) {
-    $(upid).val(id);
-    $(upname).val(response.name);
-    $("#updatemodal").modal("show");
-  });
+  console.log(id);
+  $.get(
+    "https://assignment03web.herokuapp.com/api/faculty/" + id,
+    function (response) {
+      $(upid).val(id);
+      $(upname).val(response.name);
+      $("#updatemodal").modal("show");
+    }
+  );
 }
 function addnewproduct() {
   var name = $("#name").val();
-  console.log(name)
+  var color = $("#color").val();
+  var price = $("#price").val();
+  var department = $("#department").val();
+  var description = $("#description").val();
+  console.log(name);
   $.ajax({
     url: "https://assignment03web.herokuapp.com/api/faculty/",
     method: "POST",
-    data: {name:name},
+    headers: { "Content-Type": "application/json" },
+    dataType: "json",
+    // data: { name: name },
+    data: JSON.stringify({
+      name: name,
+      color: color,
+      price: price,
+      department: department,
+      description: description,
+    }),
     success: function (response) {
       console.log(response);
       loaddata();
@@ -72,8 +90,14 @@ function loaddata() {
       for (var i = 0; i < response.length; i++) {
         var pro = response[i];
         // product.append(`<div class="eproduct"><p><strong>id: </strong> ${pro._id}</p><h3><strong>Name: </strong>${pro.name}</h3><p><strong>Color: </strong>${pro.color}</p><p><strong>Price: </strong>${pro.price}</p><p><strong>Department: </strong>${pro.department}</p><p><strong>Description: </strong>${pro.description}<button class="btn btn-danger float-right">Delete</ button></p></div> `);
+        // product.append(
+        //   `<div class="eproduct" data-id=${i}  ><h3>${pro}</h3><p><button id="delbtn" class="btn btn-danger float-right">Delete</button><button id="editbtn" class="btn btn-warning float-right">Edit</button></p></div> `
+        // );
+        // product.append(
+        //   `<div class="eproduct" data-id="${i}"><p>${pro}</p><h3>${pro.name}</h3><p><button id="delbtn" class="btn btn-danger float-right">Delete</button><button id="editbtn" class="btn btn-warning float-right">Edit</button>${pro.age}</p><p>${pro.price}</p><p>${pro.department}</p><p>${pro.description}</p></div> `
+        // );
         product.append(
-          `<div class="eproduct" data-id=${i}  ><h3>${pro}</h3><p><button id="delbtn" class="btn btn-danger float-right">Delete</button><button id="editbtn" class="btn btn-warning float-right">Edit</button></p></div> `
+          `<div class="eproduct" data-id="${i}"><h3>${pro.name}</h3><p><button id="delbtn" class="btn btn-danger float-right">Delete</button><button id="editbtn" class="btn btn-warning float-right">Edit</button>${pro.color}</p><p>${pro.price}</p><p>${pro.department}</p><p>${pro.description}</p></div> `
         );
       }
     },
