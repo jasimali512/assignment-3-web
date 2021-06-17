@@ -1,26 +1,18 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
-const cors = require("cors");
-// const faculty = [];
+var faculty = [];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept, DELETE"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-  next();
-});
+var cors=require('cors');
 
+app.use(cors({origin:true,credentials: true}));
 //first parameter is url
 //second is a function with two inputs one is request and one is response
 app.use(express.static("public"));
 app.get("/api/faculty", function (req, res) {
-  res.send(faculty);
+  res.json(faculty);
 });
 //get one resource
 app.get("/api/faculty/:index", function (req, res) {
@@ -31,7 +23,7 @@ app.get("/api/faculty/:index", function (req, res) {
 //update one resource with id e.g. index
 app.put("/api/faculty/:index", function (req, res) {
   //   console.log(req.body);
-  faculty[req.params.index] = req.body.name;
+  faculty[req.params.index].name = req.body.name;
   res.send(faculty[req.params.index]);
 });
 //delete one resource
@@ -42,7 +34,7 @@ app.delete("/api/faculty/:index", function (req, res) {
 //create one resource
 app.post("/api/faculty", function (req, res) {
   // console.log(req.body)
-  faculty.push(req.body.name);
+  faculty.push(req.body);
   console.log(faculty);
   res.send(faculty);
 });
